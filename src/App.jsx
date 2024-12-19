@@ -6,37 +6,57 @@ const App = () => {
   // Note: this function runs once when the App starts up
   // and then again any piece of state 
   // changes!
-  
+
   // Example state and setter
-  const [toggle,setToggle] = useState(true);
 
   // The console.log statement below will show you each time
   // the App renders.
-  console.log('Rendering app!','toggle is',toggle);
 
 
   // actions  
 
   // render parts of our output...
-  const renderLightSwitch = () => {
-    if (toggle) {
-      return <div>🟢⚡✅ We are on </div>
-    } else {
-      return <div>🔴🔕❌ We are off :-(</div>
-    }
-  }
+
+  const [cities, setCities] = useState(["", "", "", ""]);
+  const [teamName, setTeamName] = useState(["", "", "", ""]);
+  const [crime, setCrime] = useState(["", "", "", ""]);
+  const [names, setName] = useState(["", "", "", ""]);
+  const [retiredPlayer, setRetiredPlayer] = useState(["", "", "", ""]);
+  const [college, setCollege] = useState(["", "", "", ""]);
+  const [wins, setWins] = useState([0, 0, 0, 0]);
+
+  // actions
+  const changeCities = (idx, value) => {
+    // copy the list
+    let newCities = [...cities];
+    // set the value at index
+    newCities[idx] = value;
+    // update the list
+    setCities(newCities);
+  };
+
+  const renderCities = () => {
+    return cities.map((cities, idx) => (
+      <div key={idx}>
+        City {idx + 1}:
+        <input
+          value={cities}
+          onChange={(event) => {
+            changeCities(idx, event.target.value);
+          }}
+        />
+      </div>
+    ));
+  };
 
   return (
   <main>
-    <h1>Hello React World</h1>
-    <div className="col">
-      <button onClick={()=>setToggle(!toggle)}>Click me!</button>
-      <div>
-        {renderLightSwitch()}
-      </div>
-    </div>    
+    <h1>Nfl Team Creator</h1>
+    Name 4 Cities:
+    {renderCities()}
+    <hr />
+      <h2>Debug:</h2>
+      {JSON.stringify(cities)}
   </main>
   );
 };
-
-export default App;
