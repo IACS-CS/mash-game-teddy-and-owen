@@ -2,61 +2,109 @@ import { useState } from "react";
 import "./App.css";
 
 const App = () => {
+  // State for navigation
+  const [currentPage, setCurrentPage] = useState("cities");
 
-  // Note: this function runs once when the App starts up
-  // and then again any piece of state 
-  // changes!
-
-  // Example state and setter
-
-  // The console.log statement below will show you each time
-  // the App renders.
-
-
-  // actions  
-
-  // render parts of our output...
-
+  // State for cities and team names
   const [cities, setCities] = useState(["", "", "", ""]);
-  const [teamName, setTeamName] = useState(["", "", "", ""]);
-  const [crime, setCrime] = useState(["", "", "", ""]);
-  const [names, setName] = useState(["", "", "", ""]);
-  const [retiredPlayer, setRetiredPlayer] = useState(["", "", "", ""]);
-  const [college, setCollege] = useState(["", "", "", ""]);
-  const [wins, setWins] = useState([0, 0, 0, 0]);
+  const [teamNames, setTeamNames] = useState(["", "", "", ""]);
 
-  // actions
-  const changeCities = (idx, value) => {
-    // copy the list
-    let newCities = [...cities];
-    // set the value at index
-    newCities[idx] = value;
-    // update the list
-    setCities(newCities);
+  // Function to change pages
+  const goToPage = (page) => {
+    setCurrentPage(page);
   };
 
-  const renderCities = () => {
-    return cities.map((cities, idx) => (
-      <div key={idx}>
-        City {idx + 1}:
-        <input
-          value={cities}
-          onChange={(event) => {
-            changeCities(idx, event.target.value);
-          }}
-        />
+  // Action to update a specific city
+  const changeCity = (index, value) => {
+    const updatedCities = [...cities];
+    updatedCities[index] = value;
+    setCities(updatedCities);
+  };
+
+  // Action to update a specific team name
+  const changeTeamName = (index, value) => {
+    const updatedTeamNames = [...teamNames];
+    updatedTeamNames[index] = value;
+    setTeamNames(updatedTeamNames);
+  };
+
+  // Render the Cities page
+  const renderCitiesPage = () => {
+    return (
+      <div>
+        <h1>Step 1: Name 4 Cities</h1>
+        {cities.map((city, index) => (
+          <div key={index}>
+            <label>
+              City {index + 1}:
+              <input
+                value={city}
+                onChange={(event) => changeCity(index, event.target.value)}
+              />
+            </label>
+          </div>
+        ))}
+        <button onClick={() => goToPage("teamNames")}>Next: Team Names</button>
       </div>
-    ));
+    );
   };
 
-  return (
-  <main>
-    <h1>Nfl Team Creator</h1>
-    Name 4 Cities:
-    {renderCities()}
-    <hr />
-      <h2>Debug:</h2>
-      {JSON.stringify(cities)}
-  </main>
-  );
+  // Render the Team Names page
+  const renderTeamNamesPage = () => {
+    return (
+      <div>
+        <h1>Step 2: Name 4 Teams</h1>
+        {teamNames.map((teamName, index) => (
+          <div key={index}>
+            <label>
+              Team {index + 1}:
+              <input
+                value={teamName}
+                onChange={(event) => changeTeamName(index, event.target.value)}
+              />
+            </label>
+          </div>
+        ))}
+        <button onClick={() => goToPage("cities")}>Back to Cities</button>
+        <button onClick={() => goToPage("summary")}>Next: Summary</button>
+      </div>
+    );
+  };
+
+  // Render the Summary page
+  const renderSummaryPage = () => {
+    return (
+      <div>
+        <h1>Summary</h1>
+        <h2>Cities:</h2>
+        <ul>
+          {cities.map((city, index) => (
+            <li key={index}>{city}</li>
+          ))}
+        </ul>
+        <h2>Teams:</h2>
+        <ul>
+          {teamNames.map((teamName, index) => (
+            <li key={index}>{teamName}</li>
+          ))}
+        </ul>
+        <button onClick={() => goToPage("cities")}>Edit Cities</button>
+        <button onClick={() => goToPage("teamNames")}>Edit Team Names</button>
+      </div>
+    );
+  };
+
+  // Conditionally render the current page
+  let pageContent;
+  if (currentPage === "cities") {
+    pageContent = renderCitiesPage();
+  } else if (currentPage === "teamNames") {
+    pageContent = renderTeamNamesPage();
+  } else if (currentPage === "summary") {
+    pageContent = renderSummaryPage();
+  }
+
+  return <main>{pageContent}</main>;
 };
+
+export default App;
