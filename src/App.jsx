@@ -8,24 +8,19 @@ const App = () => {
   // changes!
   
   // Example state and setter
-  const [toggle,setToggle] = useState(true);
 
   // The console.log statement below will show you each time
   // the App renders.
-  console.log('Rendering app!','toggle is',toggle);
 
 
   // actions  
 
   // render parts of our output...
-  const renderLightSwitch = () => {
-    
-  }
 
   const [cities, setCities] = useState(["", "", "", ""]);
 
   // actions
-  const changeOption = (idx, value) => {
+  const changeCities = (idx, value) => {
     // copy the list
     let newCities = [...cities];
     // set the value at index
@@ -53,6 +48,9 @@ const App = () => {
     <h1>Nfl Team Guesser</h1>
     Name 4 Cities:
     {renderCities()}
+    <hr />
+      <h2>Debug:</h2>
+      {JSON.stringify(cities)}
   </main>
   );
 };
