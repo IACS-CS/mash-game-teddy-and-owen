@@ -18,6 +18,12 @@ const App = () => {
   // render parts of our output...
 
   const [cities, setCities] = useState(["", "", "", ""]);
+  const [teamName, setTeamName] = useState(["", "", "", ""]);
+  const [crime, setCrime] = useState(["", "", "", ""]);
+  const [names, setName] = useState(["", "", "", ""]);
+  const [retiredPlayer, setRetiredPlayer] = useState(["", "", "", ""]);
+  const [college, setCollege] = useState(["", "", "", ""]);
+  const [wins, setWins] = useState([0, 0, 0, 0]);
 
   // actions
   const changeCities = (idx, value) => {
@@ -45,7 +51,7 @@ const App = () => {
 
   return (
   <main>
-    <h1>Nfl Team Guesser</h1>
+    <h1>Nfl Team Creator</h1>
     Name 4 Cities:
     {renderCities()}
     <hr />
