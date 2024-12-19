@@ -19,22 +19,40 @@ const App = () => {
 
   // render parts of our output...
   const renderLightSwitch = () => {
-    if (toggle) {
-      return <div>🟢⚡✅ We are on </div>
-    } else {
-      return <div>🔴🔕❌ We are off :-(</div>
-    }
+    
   }
+
+  const [cities, setCities] = useState(["", "", "", ""]);
+
+  // actions
+  const changeOption = (idx, value) => {
+    // copy the list
+    let newCities = [...cities];
+    // set the value at index
+    newCities[idx] = value;
+    // update the list
+    setCities(newCities);
+  };
+
+  const renderCities = () => {
+    return cities.map((cities, idx) => (
+      <div key={idx}>
+        City {idx + 1}:
+        <input
+          value={cities}
+          onChange={(event) => {
+            changeCities(idx, event.target.value);
+          }}
+        />
+      </div>
+    ));
+  };
 
   return (
   <main>
-    <h1>Hello React World</h1>
-    <div className="col">
-      <button onClick={()=>setToggle(!toggle)}>Click me!</button>
-      <div>
-        {renderLightSwitch()}
-      </div>
-    </div>    
+    <h1>Nfl Team Guesser</h1>
+    Name 4 Cities:
+    {renderCities()}
   </main>
   );
 };
