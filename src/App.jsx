@@ -142,24 +142,33 @@ const App = () => {
 
   const renderWinsPage = () => (
     <div>
-      <h1>Step 7: Add Wins</h1>
+      <h1>Step 7: Choose 4 Numbers</h1>
       {wins.map((win, index) => (
-        <div key={index}>
-          <label>
-            Wins for Team {index + 1}:
-            <input
-              type="number"
-              value={win}
-              onChange={(event) => updateList(wins, setWins, index, parseInt(event.target.value) || 0)}
-            />
-          </label>
+        <div key={index} style={{ marginBottom: "10px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <button
+              type="button"
+              onClick={() => updateList(wins, setWins, index, Math.max(0, win - 1))}
+              disabled={win <= 0}
+            >
+              -
+            </button>
+            <span>{win}</span>
+            <button
+              type="button"
+              onClick={() => updateList(wins, setWins, index, Math.min(17, win + 1))}
+              disabled={win >= 17}
+            >
+              +
+            </button>
+          </div>
         </div>
       ))}
       <button onClick={() => goToPage("colleges")}>Back to Colleges</button>
       <button onClick={() => goToPage("summary")}>Next: Summary</button>
     </div>
   );
-
+  
   const renderSummaryPage = () => (
     <div>
       <h1>Summary</h1>
@@ -185,8 +194,12 @@ const App = () => {
       <ul>{wins.map((win, index) => (<li key={index}>{win}</li>))}</ul>
 
       <button onClick={() => goToPage("wins")}>Edit Wins</button>
-      <button onClick={() => goToPage("cities")}>Start Over</button>
+      <button onClick={() => goToPage("picker")}>Next: Picker</button>
     </div>
+  ); 
+
+  const renderPickerPage = () => (
+
   );
 
   // Conditionally render the current page
@@ -196,6 +209,12 @@ const App = () => {
   else if (currentPage === "crimes") pageContent = renderCrimesPage();
   else if (currentPage === "names") pageContent = renderNamesPage();
   else if (currentPage === "retiredPlayers") pageContent = renderRetiredPlayersPage();
+  else if (currentPage === "colleges") pageContent = renderCollegesPage();
+  else if (currentPage === "wins") pageContent = renderWinsPage();
+  else if (currentPage === "summary") pageContent = renderSummaryPage();
+  else if (currentPage === "picker") pageContent = renderPickerPage();
+
+  return <div classname="App">{pageContent}</div>;
 };
 
 
