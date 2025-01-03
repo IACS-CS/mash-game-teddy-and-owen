@@ -19,14 +19,14 @@ const App = () => {
     setCurrentPage(page);
   };
 
-  // Helper function to update state for lists
+  // Helper function to update state for lists, Help from AI was used to create this function
   const updateList = (list, setList, index, value) => {
     const updatedList = [...list];
     updatedList[index] = value;
     setList(updatedList);
   };
 
-  // Render pages
+  // Render pages Ai was used to create this initial function, following ones were modified based on this one with small amounts of help from AI
   const renderCitiesPage = () => (
     <div>
       <h1>Step 1: Name 4 Cities</h1>
@@ -41,17 +41,17 @@ const App = () => {
           </label>
         </div>
       ))}
-      <button onClick={() => goToPage("teamNames")}>Next: Team Names</button>
+      <button onClick={() => goToPage("teamNames")}>Next: Nouns</button>
     </div>
   );
 
   const renderTeamNamesPage = () => (
     <div>
-      <h1>Step 2: Name 4 Teams</h1>
+      <h1>Step 2: Name 4 Nouns</h1>
       {teamNames.map((teamName, index) => (
         <div key={index}>
           <label>
-            Team {index + 1}:
+            Word {index + 1}:
             <input
               value={teamName}
               onChange={(event) => updateList(teamNames, setTeamNames, index, event.target.value)}
@@ -66,7 +66,7 @@ const App = () => {
 
   const renderCrimesPage = () => (
     <div>
-      <h1>Step 3: List Crimes</h1>
+      <h1>Step 3: List 4 Crimes</h1>
       {crimes.map((crime, index) => (
         <div key={index}>
           <label>
@@ -78,18 +78,18 @@ const App = () => {
           </label>
         </div>
       ))}
-      <button onClick={() => goToPage("teamNames")}>Back to Team Names</button>
+      <button onClick={() => goToPage("teamNames")}>Back to Nouns</button>
       <button onClick={() => goToPage("names")}>Next: Names</button>
     </div>
   );
 
   const renderNamesPage = () => (
     <div>
-      <h1>Step 4: Add Player Names</h1>
+      <h1>Step 4: Add 4 Names</h1>
       {names.map((name, index) => (
         <div key={index}>
           <label>
-            Player Name {index + 1}:
+            Name {index + 1}:
             <input
               value={name}
               onChange={(event) => updateList(names, setNames, index, event.target.value)}
@@ -104,7 +104,7 @@ const App = () => {
 
   const renderRetiredPlayersPage = () => (
     <div>
-      <h1>Step 5: Add Retired Players</h1>
+      <h1>Step 5: Name 4 Retired NFL Players</h1>
       {retiredPlayers.map((player, index) => (
         <div key={index}>
           <label>
@@ -136,7 +136,7 @@ const App = () => {
         </div>
       ))}
       <button onClick={() => goToPage("retiredPlayers")}>Back to Retired Players</button>
-      <button onClick={() => goToPage("wins")}>Next: Wins</button>
+      <button onClick={() => goToPage("wins")}>Next: Numbers</button>
     </div>
   );
 
@@ -193,16 +193,39 @@ const App = () => {
       <h2>Wins:</h2>
       <ul>{wins.map((win, index) => (<li key={index}>{win}</li>))}</ul>
 
-      <button onClick={() => goToPage("wins")}>Edit Wins</button>
+      <button onClick={() => goToPage("wins")}>Edit Answers</button>
       <button onClick={() => goToPage("picker")}>Next: Picker</button>
     </div>
   ); 
-
-  const renderPickerPage = () => (
-
+  const [pickedNumber, setPickedNumber] = useState(1)
+  const subtractPickedNumber = () => {
+    if(pickedNumber > 0) setPickedNumber(pickedNumber - 1);
+  }
+  const addPickedNumber = () => {
+    if(pickedNumber < 10) setPickedNumber(pickedNumber + 1);
+  }
+  const pickerPage = () => (
+    <div>
+      <h1>What is your favorite number 1-10?</h1>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <button
+              type="button"
+              onClick={subtractPickedNumber}
+            >
+              -
+            </button>
+            <span>{pickedNumber}</span>
+            <button
+              type="button"
+              onClick={addPickedNumber}
+            >
+              +
+            </button>
+      </div>
+    </div>
   );
 
-  // Conditionally render the current page
+  //render the current page
   let pageContent;
   if (currentPage === "cities") pageContent = renderCitiesPage();
   else if (currentPage === "teamNames") pageContent = renderTeamNamesPage();
@@ -212,7 +235,7 @@ const App = () => {
   else if (currentPage === "colleges") pageContent = renderCollegesPage();
   else if (currentPage === "wins") pageContent = renderWinsPage();
   else if (currentPage === "summary") pageContent = renderSummaryPage();
-  else if (currentPage === "picker") pageContent = renderPickerPage();
+  else if (currentPage === "picker") pageContent = pickerPage();
 
   return <div classname="App">{pageContent}</div>;
 };
