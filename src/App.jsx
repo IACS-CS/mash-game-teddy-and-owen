@@ -204,24 +204,86 @@ const App = () => {
   const addPickedNumber = () => {
     if(pickedNumber < 10) setPickedNumber(pickedNumber + 1);
   }
+
+
+  const handleClick = (row, col) => {
+    alert(`Button clicked: ${shuffledMatrix[row][col]}`);
+  };
+
+  
+  const categories = [
+    "Cities",
+    "Team Names",
+    "Starting QB Crime",
+    "Backup QB Name",
+    "Coach Name",
+    "College",
+    "Number of Wins",
+  ];
+
+  const shuffleArray = (array) => {
+    const shuffledArray = [...array]; // Create a copy of the array
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // Swap elements
+    }
+    return shuffledArray;
+  };
+
+  const shuffledCities = shuffleArray(cities);
+  const shuffledTeamNames = shuffleArray(teamNames);
+  const shuffledCrimes = shuffleArray(crimes);
+  const shuffledNames = shuffleArray(names);
+  const shuffledRetiredPlayers = shuffleArray(retiredPlayers);
+  const shuffledColleges = shuffleArray(colleges);
+  const shuffledWins = shuffleArray(wins);
+
+  const shuffledMatrix = [
+    shuffledCities,
+    shuffledTeamNames,
+    shuffledCrimes,
+    shuffledNames,
+    shuffledRetiredPlayers,
+    shuffledColleges,
+    shuffledWins,
+  ]
+
+  
   const pickerPage = () => (
+    
     <div>
-      <h1>What is your favorite number 1-10?</h1>
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <button
-              type="button"
-              onClick={subtractPickedNumber}
-            >
-              -
-            </button>
-            <span>{pickedNumber}</span>
-            <button
-              type="button"
-              onClick={addPickedNumber}
-            >
-              +
-            </button>
-      </div>
+      {categories.map((category, rowIndex) => (
+        <div
+          key={rowIndex}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginBottom: "10px",
+          }}
+        >
+          {/* Category Label */}
+          <div style={{ marginRight: "10px", fontWeight: "bold", width: "150px" }}>
+            {category}:
+          </div>
+
+          {/* Row of Buttons */}
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${4}, 1fr)`, gap: "10px" }}>
+            {Array.from({ length: 4 }).map((_, colIndex) => (
+              <button
+                key={`${rowIndex}-${colIndex}`}
+                style={{
+                  padding: "10px",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleClick(rowIndex, colIndex)}
+              >
+                {`Option ${colIndex + 1}`}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 
