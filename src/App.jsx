@@ -47,7 +47,7 @@ const App = () => {
 
   const renderTeamNamesPage = () => (
     <div>
-      <h1>Step 2: Name 4 Nouns</h1>
+      <h1>Step 2: Name 4 Pluarl Nouns(Animals, Objects, Ect.)</h1>
       {teamNames.map((teamName, index) => (
         <div key={index}>
           <label>
@@ -197,23 +197,21 @@ const App = () => {
       <button onClick={() => goToPage("picker")}>Next: Picker</button>
     </div>
   ); 
-  const [pickedNumber, setPickedNumber] = useState(1)
-  const subtractPickedNumber = () => {
-    if(pickedNumber > 0) setPickedNumber(pickedNumber - 1);
-  }
-  const addPickedNumber = () => {
-    if(pickedNumber < 10) setPickedNumber(pickedNumber + 1);
-  }
+  const [finalSelections, setFinalSelections] = useState(["", "", "", "", "", "", ""]);
 
 
   const handleClick = (row, col) => {
-    alert(`Button clicked: ${shuffledMatrix[row][col]}`);
+    const updatedSelections = [...finalSelections];
+    if (updatedSelections[row] === "") {
+      updatedSelections[row] = shuffledMatrix[row][col];
+      setFinalSelections(updatedSelections);
+    }
   };
 
   
   const categories = [
-    "Cities",
-    "Team Names",
+    "City",
+    "Team Name",
     "Starting QB Crime",
     "Backup QB Name",
     "Coach Name",
@@ -222,12 +220,12 @@ const App = () => {
   ];
 
   const shuffleArray = (array) => {
-    const shuffledArray = [...array]; // Create a copy of the array
-    for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const shuffled = [...array]; // Create a copy to avoid modifying the original
+    for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // Swap elements
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-    return shuffledArray;
+    return shuffled;
   };
 
   const shuffledCities = shuffleArray(cities);
@@ -247,11 +245,20 @@ const App = () => {
     shuffledColleges,
     shuffledWins,
   ]
-
   
   const pickerPage = () => (
-    
     <div>
+      {/* Display the final selections list */}
+      <h2>Final Selections:</h2>
+      <ul>
+        {finalSelections.map((selection, index) => (
+          <li key={index}>
+            {categories[index]}: {selection || "Not selected"}
+          </li>
+        ))}
+      </ul>
+  
+      {/* Category Picker */}
       {categories.map((category, rowIndex) => (
         <div
           key={rowIndex}
@@ -265,27 +272,72 @@ const App = () => {
           <div style={{ marginRight: "10px", fontWeight: "bold", width: "150px" }}>
             {category}:
           </div>
-
+  
           {/* Row of Buttons */}
-          <div style={{ display: "grid", gridTemplateColumns: `repeat(${4}, 1fr)`, gap: "10px" }}>
-            {Array.from({ length: 4 }).map((_, colIndex) => (
-              <button
-                key={`${rowIndex}-${colIndex}`}
-                style={{
-                  padding: "10px",
-                  fontSize: "16px",
-                  cursor: "pointer",
-                }}
-                onClick={() => handleClick(rowIndex, colIndex)}
-              >
-                {`Option ${colIndex + 1}`}
-              </button>
-            ))}
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(4, 1fr)`, gap: "10px" }}>
+            {Array.from({ length: 4 }).map((_, colIndex) => {
+              const currentValue = shuffledMatrix[rowIndex][colIndex];
+              const isSelected = finalSelections[rowIndex] === currentValue;
+  
+              return (
+                <button
+                  key={`${rowIndex}-${colIndex}`}
+                  style={{
+                    padding: "10px",
+                    fontSize: "16px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleClick(rowIndex, colIndex)} // Handle selection
+                  disabled={isSelected} // Disable button if already selected
+                >
+                  {/* Button text */}
+                  {`${category} ${colIndex + 1}`}
+                </button>
+              );
+            })}
           </div>
         </div>
       ))}
+      <button
+        onClick={() => {
+          const allSelected = finalSelections.every((selection) => selection);
+          if (allSelected) goToPage("announcement");
+          else alert("Please make a selection for all categories before proceeding.");
+        }}
+      >
+        Submit Selections
+      </button>
     </div>
   );
+
+  const renderAnnouncementPage = () => {
+    const [city, teamName, crime, name, retiredPlayer, college, win] = finalSelections;
+
+    let seasonSummary = "";
+    if (win < 5) {
+      seasonSummary = `The ${city}, ${teamName} have finished last in their division in their first year in the NFL. They did not make the playoffs, and their season ends here.`;
+    } else if (win >= 4 && win <= 8) {
+      seasonSummary = `The ${city}, ${teamName} have finished 3rd in their division in their first year in the NFL. They did not make the playoffs, and their season ends here.`;
+    } else if (win >= 9 && win <= 12) {
+      seasonSummary = `The ${city}, ${teamName} have finished 2nd in their division in their first year in the NFL and make the playoffs as a wildcard team.`;
+    } else if (win >= 13) {
+      seasonSummary = `The ${city}, ${teamName} have won their division in their first year in the NFL and make the playoffs as a division champion.`;
+    }
+
+    return (
+      <div>
+        <h1>Team Season Overview</h1>
+        <p>
+          Hello, I am Roger Goodell. I am pleased to announce our new team from <strong>{city}</strong>, the <strong>{teamName}</strong>. This team consists of some very talented players who are all ready to shoot for the championship. Sadly, their original starting quarterback committed <strong>{crime}</strong>, so he was sent to jail. Therefore, their new starting quarterback will be <strong>{name}</strong>, who just won a national championship with <strong>{college}</strong>. The head coach of this wonderful team will be the former NFL player <strong>{retiredPlayer}</strong>.
+        </p>
+        <p>
+          "Scott Hanson here bringing you some season records. After their first season in the NFL, the <strong>{city} {teamName}</strong> won a shocking <strong>{win}</strong> games. {seasonSummary}"
+        </p>
+        <button onClick={() => goToPage("picker")}>Back to Picker</button>
+      </div>
+    );
+  };
+  
 
   //render the current page
   let pageContent;
@@ -298,6 +350,7 @@ const App = () => {
   else if (currentPage === "wins") pageContent = renderWinsPage();
   else if (currentPage === "summary") pageContent = renderSummaryPage();
   else if (currentPage === "picker") pageContent = pickerPage();
+  else if (currentPage === "announcement") pageContent = renderAnnouncementPage();
 
   return <div classname="App">{pageContent}</div>;
 };
